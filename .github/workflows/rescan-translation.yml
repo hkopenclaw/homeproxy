@@ -1,0 +1,37 @@
+name: Rescan Translation
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch: # 允許在 GitHub 網頁介面手動觸發執行
+
+jobs:
+  rescan:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. 檢出儲存庫代碼
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 2. 賦予腳本執行權限並執行
+      - name: Run rescan translation script
+        run: |
+          chmod +x .github/rescan-translation.sh
+          ./.github/rescan-translation.sh
+
+      # 3. 檢查是否有檔案更新，如果有則自動提交並推送
+      - name: Commit and push updates
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          
+          # 檢查 po 目錄是否有異動
+          if [ -n "$(git status --porcelain po/)" ]; then
+            git add po/
+            git commit -m "chore: automatic translation rescan and update"
+            git push
+          else
+            echo "No translation changes detected."
+          fi
