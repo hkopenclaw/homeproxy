@@ -10,6 +10,7 @@
 'require uci';
 'require ui';
 'require view';
+'require validation';
 
 'require homeproxy as hp';
 'require tools.widgets as widgets';
@@ -17,6 +18,307 @@
 function allowInsecureConfirm(ev, _section_id, value) {
 	if (value === '1' && !confirm(_('Are you sure to allow insecure?')))
 		ev.target.firstElementChild.checked = null;
+}
+
+var stubValidator = {
+	factory: validation,
+
+	apply: function(type, value, args) {
+		if (value != null)
+			this.value = value;
+
+		return validation.types[type].apply(this, args);
+	},
+
+	assert: function(condition) {
+		return !!condition;
+	}
+};
+
+function isWireguardConfigInput(text) {
+	return /\[(Interface|Peer)\]/i.test(String(text || ''));
+}
+
+function parseWireguardEndpoint(endpoint) {
+	endpoint = String(endpoint || '').trim();
+
+	let m = endpoint.match(/^\[([a-fA-F0-9:]+)\]:(\d+)$/) ||
+		endpoint.match(/^(.+):(\d+)$/);
+
+	if (!m)
+		return null;
+
+	return {
+		host: m[1],
+		port: m[2]
+	};
+}
+
+function normalizeWireguardHost(host) {
+	return String(host || '').replace(/^\[|\]$/g, '').trim();
+}
+
+function isWireguardIpHost(host) {
+	host = normalizeWireguardHost(host);
+
+	return !!host && (
+		stubValidator.apply('ip4addr', host, [ true ]) ||
+		stubValidator.apply('ip6addr', host, [ true ])
+	);
+}
+
+function buildWireguardLabel(host, port, used) {
+	host = normalizeWireguardHost(host);
+
+	let base = 'wg-ep';
+
+	if (host)
+		base = isWireguardIpHost(host) ? ('wg-ep-' + host) : host;
+
+	let label = base;
+	let i = 2;
+
+	while (used[label])
+		label = '%s-%d'.format(base, i++);
+
+	used[label] = true;
+	return label;
+}
+
+function sanitizeNodeName(name) {
+	name = String(name || '').toLowerCase().trim()
+		.replace(/[^a-z0-9_]+/g, '_')
+		.replace(/^_+/, '')
+		.replace(/_+/g, '_')
+		.replace(/_+$/, '');
+
+	if (!name)
+		name = 'node';
+
+	if (!name.match(/^[a-z_]/))
+		name = 'node_' + name;
+
+	return name;
+}
+
+function buildNodeSectionName(label, uciconfig, used) {
+	let base = sanitizeNodeName(label);
+	let sid = base;
+	let i = 2;
+
+	while (used[sid] || uci.get(uciconfig, sid))
+		sid = '%s_%d'.format(base, i++);
+
+	used[sid] = true;
+	return sid;
+}
+
+function setImportError(nodes, message) {
+	let error = nodes.querySelector('.alert-message');
+
+	if (!message) {
+		error.firstChild.data = '';
+		error.style.display = 'none';
+		return;
+	}
+
+	error.firstChild.data = message;
+	error.style.display = 'block';
+}
+
+function bindImportTextareaEvents(nodes, textarea) {
+	nodes.addEventListener('dragover', function(ev) {
+		ev.preventDefault();
+		ev.stopPropagation();
+
+		if (ev.dataTransfer)
+			ev.dataTransfer.dropEffect = 'copy';
+	});
+
+	nodes.addEventListener('drop', function(ev) {
+		ev.preventDefault();
+		ev.stopPropagation();
+
+		let file = ev.dataTransfer && ev.dataTransfer.files && ev.dataTransfer.files[0];
+
+		if (file) {
+			let reader = new FileReader();
+
+			reader.onload = function(e) {
+				textarea.value = String(e.target.result || '');
+				setImportError(nodes, null);
+			};
+
+			reader.readAsText(file);
+			return;
+		}
+
+		let text = ev.dataTransfer ? ev.dataTransfer.getData('text/plain') : '';
+		if (text) {
+			textarea.value = text;
+			setImportError(nodes, null);
+		}
+	});
+
+	textarea.addEventListener('paste', function() {
+		setImportError(nodes, null);
+	});
+
+	textarea.addEventListener('input', function() {
+		setImportError(nodes, null);
+	});
+}
+
+function parseWireguardConfig(data) {
+	let lines = String(data || '').split(/\r?\n/);
+	let section = null;
+	let parsed = { peers: [] };
+	let peer = null;
+	let used = {};
+
+	for (let i = 0; i < lines.length; i++) {
+		let line = lines[i].replace(/#.*$/, '').trim();
+
+		if (!line)
+			continue;
+
+		if (line.match(/^\[(\w+)\]$/)) {
+			section = RegExp.$1.toLowerCase();
+
+			if (section === 'peer') {
+				peer = {};
+				parsed.peers.push(peer);
+			}
+			else {
+				peer = null;
+			}
+
+			continue;
+		}
+
+		if (!section || !line.match(/^(\w+)\s*=\s*(.+)$/))
+			continue;
+
+		let key = RegExp.$1.toLowerCase();
+		let val = RegExp.$2.trim();
+
+		if (!val.length)
+			continue;
+
+		if (section === 'interface') {
+			switch (key) {
+			case 'address':
+				parsed.interface_address = val.split(/[, ]+/).filter(Boolean);
+				break;
+			case 'privatekey':
+				parsed.interface_privatekey = val;
+				break;
+			case 'mtu':
+				parsed.interface_mtu = val;
+				break;
+			}
+		}
+		else if (section === 'peer' && peer) {
+			switch (key) {
+			case 'publickey':
+				peer.peer_publickey = val;
+				break;
+			case 'presharedkey':
+				peer.peer_presharedkey = val;
+				break;
+			case 'endpoint':
+				peer.peer_endpoint = val;
+				break;
+			case 'persistentkeepalive':
+				peer.peer_persistentkeepalive = (val === 'off' || val === '0') ? '' : val;
+				break;
+			case 'reserved':
+				peer.peer_reserved = val.split(/[, ]+/).filter(Boolean);
+				break;
+			}
+		}
+	}
+
+	if (!parsed.peers.length)
+		return _('Peer setting is missing');
+
+	if (parsed.peers.length > 1)
+		return _('Only single-peer WireGuard configuration is supported');
+
+	let p = parsed.peers[0];
+	let ep = parseWireguardEndpoint(p.peer_endpoint);
+
+	if (!ep)
+		return _('Endpoint setting is missing or invalid');
+
+	return {
+		label: buildWireguardLabel(ep.host, ep.port, used),
+		type: 'wireguard',
+		address: ep.host,
+		port: ep.port,
+		wireguard_local_address: parsed.interface_address ? parsed.interface_address.slice() : [],
+		wireguard_private_key: parsed.interface_privatekey || null,
+		wireguard_peer_public_key: p.peer_publickey || null,
+		wireguard_pre_shared_key: p.peer_presharedkey || null,
+		wireguard_reserved: p.peer_reserved || null,
+		wireguard_mtu: parsed.interface_mtu || null,
+		wireguard_persistent_keepalive_interval: p.peer_persistentkeepalive || null
+	};
+}
+
+function validateParsedWireguardConfig(config) {
+	if (!config || typeof(config) !== 'object')
+		return _('WireGuard configuration is invalid');
+
+	if (!config.address || !stubValidator.apply('host', config.address, []))
+		return _('Endpoint setting is missing or invalid');
+
+	if (!config.port || !stubValidator.apply('port', config.port, []))
+		return _('Endpoint port is missing or invalid');
+
+	if (!Array.isArray(config.wireguard_local_address) || !config.wireguard_local_address.length)
+		return _('Address setting is missing or invalid');
+
+	for (let i = 0; i < config.wireguard_local_address.length; i++) {
+		if (!stubValidator.apply('cidr', config.wireguard_local_address[i], []))
+			return _('Address setting is invalid');
+	}
+
+	if (!config.wireguard_private_key ||
+		hp.validateBase64Key(44, true, config.wireguard_private_key) !== true)
+		return _('Private key setting is missing or invalid');
+
+	if (!config.wireguard_peer_public_key ||
+		hp.validateBase64Key(44, true, config.wireguard_peer_public_key) !== true)
+		return _('Peer public key setting is missing or invalid');
+
+	if (config.wireguard_pre_shared_key &&
+		hp.validateBase64Key(44, true, config.wireguard_pre_shared_key) !== true)
+		return _('Pre-shared key setting is invalid');
+
+	if (config.wireguard_reserved != null) {
+		if (!Array.isArray(config.wireguard_reserved))
+			config.wireguard_reserved = [ config.wireguard_reserved ];
+
+		for (let i = 0; i < config.wireguard_reserved.length; i++) {
+			if (!String(config.wireguard_reserved[i]).match(/^-?\d+$/))
+				return _('Reserved field bytes setting is invalid');
+		}
+	}
+
+	if (config.wireguard_mtu != null && config.wireguard_mtu !== '') {
+		if (!String(config.wireguard_mtu).match(/^\d+$/) ||
+			+config.wireguard_mtu < 0 || +config.wireguard_mtu > 9000)
+			return _('MTU setting is invalid');
+	}
+
+	if (config.wireguard_persistent_keepalive_interval != null &&
+		config.wireguard_persistent_keepalive_interval !== '') {
+		if (!String(config.wireguard_persistent_keepalive_interval).match(/^\d+$/))
+			return _('Persistent keepalive interval setting is invalid');
+	}
+
+	return true;
 }
 
 function parseShareLink(uri, features) {
@@ -908,7 +1210,7 @@ function renderNodeSettings(section, data, features, main_node, routing_mode) {
 	o.rmempty = false;
 	o.modalonly = true;
 
-	o = s.option(form.Value, 'wireguard_peer_public_key', _('Peer pubkic key'),
+	o = s.option(form.Value, 'wireguard_peer_public_key', _('Peer public key'),
 		_('WireGuard peer public key.'));
 	o.depends('type', 'wireguard');
 	o.validate = L.bind(hp.validateBase64Key, this, 44);
@@ -1228,10 +1530,27 @@ return view.extend({
 		/* Import subscription links start */
 		/* Thanks to luci-app-shadowsocks-libev */
 		ss.handleLinkImport = function() {
-			let textarea = new ui.Textarea();
-			ui.showModal(_('Import share links'), [
+			let sectionNames = {};
+			let nodes = E('div', [
 				E('p', _('Support Hysteria, Shadowsocks, Trojan, v2rayN (VMess), and XTLS (VLESS) online configuration delivery standard.')),
-				textarea.render(),
+				E('p', _('Supports importing WireGuard configuration files (*.conf).')),
+				E('p', [
+					E('textarea', {
+						'placeholder': _('Paste / drag share links or WireGuard *.conf file…'),
+						'style': 'height:5em;width:100%; white-space:pre'
+					})
+				]),
+				E('div', {
+					'class': 'alert-message',
+					'style': 'display:none'
+				}, [''])
+			]);
+
+			let textarea = nodes.querySelector('textarea');
+			bindImportTextareaEvents(nodes, textarea);
+
+			ui.showModal(_('Import share links or WireGuard'), [
+				nodes,
 				E('div', { class: 'right' }, [
 					E('button', {
 						class: 'btn',
@@ -1241,46 +1560,92 @@ return view.extend({
 					E('button', {
 						class: 'btn cbi-button-action',
 						click: ui.createHandlerFn(this, () => {
-							let input_links = textarea.getValue().trim().split('\n');
-							if (input_links && input_links[0]) {
-								/* Remove duplicate lines */
-								input_links = input_links.reduce((pre, cur) =>
-									(!pre.includes(cur) && pre.push(cur), pre), []);
+							let raw = textarea.value.trim();
+							let isWG = isWireguardConfigInput(raw);
 
-								let allow_insecure = uci.get(data[0], 'subscription', 'allow_insecure');
-								let packet_encoding = uci.get(data[0], 'subscription', 'packet_encoding');
-								let imported_node = 0;
-								input_links.forEach((l) => {
-									let config = parseShareLink(l, features);
-									if (config) {
-										if (config.tls === '1' && allow_insecure === '1')
-											config.tls_insecure = '1'
-										if (['vless', 'vmess'].includes(config.type))
-											config.packet_encoding = packet_encoding
+							setImportError(nodes, null);
 
-										let nameHash = hp.calcStringMD5(config.label);
-										let sid = uci.add(data[0], 'node', nameHash);
-										Object.keys(config).forEach((k) => {
-											uci.set(data[0], sid, k, config[k]);
-										});
-										imported_node++;
-									}
+							if (!raw)
+								return ui.hideModal();
+
+							if (isWG) {
+								let config = parseWireguardConfig(raw);
+
+								if (typeof(config) === 'string') {
+									setImportError(nodes, _('Cannot parse configuration: %s').format(config));
+									return;
+								}
+
+								let rv = validateParsedWireguardConfig(config);
+								if (rv !== true) {
+									setImportError(nodes, _('Cannot parse configuration: %s').format(rv));
+									return;
+								}
+
+								let sid = buildNodeSectionName(config.label, data[0], sectionNames);
+								sid = uci.add(data[0], 'node', sid);
+
+								Object.keys(config).forEach((k) => {
+									if (config[k] != null && config[k] !== '')
+										uci.set(data[0], sid, k, config[k]);
 								});
-
-								if (imported_node === 0)
-									ui.addNotification(null, E('p', _('No valid share link found.')));
-								else
-									ui.addNotification(null, E('p', _('Successfully imported %s nodes of total %s.').format(
-										imported_node, input_links.length)));
 
 								return uci.save()
 									.then(L.bind(this.map.load, this.map))
 									.then(L.bind(this.map.reset, this.map))
-									.then(L.ui.hideModal)
+									.then(() => {
+										ui.hideModal();
+										ui.addNotification(null, E('p',
+											_('Successfully imported WireGuard configuration.')));
+									})
 									.catch(() => {});
-							} else {
-								return ui.hideModal();
 							}
+
+							let input_links = raw.split('\n')
+								.map((l) => l.trim())
+								.filter(Boolean)
+								.reduce((pre, cur) => (!pre.includes(cur) && pre.push(cur), pre), []);
+
+							if (!input_links.length)
+								return ui.hideModal();
+
+							let allow_insecure = uci.get(data[0], 'subscription', 'allow_insecure');
+							let packet_encoding = uci.get(data[0], 'subscription', 'packet_encoding');
+							let imported_node = 0;
+							input_links.forEach((l) => {
+								let config = parseShareLink(l, features);
+								if (!config)
+									return;
+
+								if (config.tls === '1' && allow_insecure === '1')
+									config.tls_insecure = '1';
+								if (['vless', 'vmess'].includes(config.type))
+									config.packet_encoding = packet_encoding;
+
+								let nameHash = hp.calcStringMD5(config.label);
+								let sid = uci.add(data[0], 'node', nameHash);
+								Object.keys(config).forEach((k) => {
+									if (config[k] != null && config[k] !== '')
+										uci.set(data[0], sid, k, config[k]);
+								});
+
+								imported_node++;
+							});
+
+							if (!imported_node) {
+								setImportError(nodes, _('No valid share link found.'));
+								return;
+							}
+
+							return uci.save()
+								.then(L.bind(this.map.load, this.map))
+								.then(L.bind(this.map.reset, this.map))
+								.then(() => {
+									ui.hideModal();
+									ui.addNotification(null, E('p', _('Successfully imported %s nodes of total %s.').format(
+										imported_node, input_links.length)));
+								})
+								.catch(() => {});
 						})
 					}, [ _('Import') ])
 				])
@@ -1308,9 +1673,9 @@ return view.extend({
 
 			el.appendChild(E('button', {
 				'class': 'cbi-button cbi-button-add',
-				'title': _('Import share links'),
+				'title': _('Import share links or WireGuard'),
 				'click': ui.createHandlerFn(this, 'handleLinkImport')
-			}, [ _('Import share links') ]));
+			}, [ _('Import') ]));
 
 			return el;
 		}
