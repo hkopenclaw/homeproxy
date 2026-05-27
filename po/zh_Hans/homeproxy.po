@@ -333,7 +333,7 @@ msgstr "取消"
 #: htdocs/luci-static/resources/view/homeproxy/node.js:1575
 #: htdocs/luci-static/resources/view/homeproxy/node.js:1581
 msgid "Cannot parse configuration: %s"
-msgstr ""
+msgstr "无法解析配置：%s"
 
 #: htdocs/luci-static/resources/view/homeproxy/node.js:1379
 #: htdocs/luci-static/resources/view/homeproxy/server.js:756
@@ -823,12 +823,12 @@ msgstr "加密方式"
 
 #: htdocs/luci-static/resources/view/homeproxy/node.js:277
 msgid "Endpoint port is missing or invalid"
-msgstr ""
+msgstr "端点端口缺失或无效"
 
 #: htdocs/luci-static/resources/view/homeproxy/node.js:252
 #: htdocs/luci-static/resources/view/homeproxy/node.js:274
 msgid "Endpoint setting is missing or invalid"
-msgstr ""
+msgstr "端点设置缺失或无效"
 
 #: htdocs/luci-static/resources/view/homeproxy/status.js:139
 msgid "Error"
@@ -1211,7 +1211,7 @@ msgstr "导入"
 #: htdocs/luci-static/resources/view/homeproxy/node.js:1552
 #: htdocs/luci-static/resources/view/homeproxy/node.js:1676
 msgid "Import share links or WireGuard"
-msgstr ""
+msgstr "导入分享链接或 WireGuard"
 
 #: htdocs/luci-static/resources/view/homeproxy/client.js:336
 #: htdocs/luci-static/resources/view/homeproxy/server.js:860
@@ -1375,7 +1375,7 @@ msgstr "MTU"
 
 #: htdocs/luci-static/resources/view/homeproxy/node.js:312
 msgid "MTU setting is invalid"
-msgstr ""
+msgstr "MTU 设置无效"
 
 #: htdocs/luci-static/resources/view/homeproxy/client.js:150
 msgid "Main UDP node"
@@ -1702,7 +1702,7 @@ msgstr "仅代理中国大陆"
 
 #: htdocs/luci-static/resources/view/homeproxy/node.js:246
 msgid "Only single-peer WireGuard configuration is supported"
-msgstr ""
+msgstr "仅支持单一对端的 WireGuard 配置"
 
 #: htdocs/luci-static/resources/view/homeproxy/client.js:580
 #: htdocs/luci-static/resources/view/homeproxy/client.js:1060
@@ -1767,7 +1767,7 @@ msgstr "密码"
 
 #: htdocs/luci-static/resources/view/homeproxy/node.js:1539
 msgid "Paste / drag share links or WireGuard *.conf file…"
-msgstr ""
+msgstr "粘贴 / 拖动分享链接或 WireGuard *.conf 文件…"
 
 #: htdocs/luci-static/resources/view/homeproxy/client.js:967
 #: htdocs/luci-static/resources/view/homeproxy/client.js:1346
@@ -1780,15 +1780,15 @@ msgstr "路径"
 
 #: htdocs/luci-static/resources/view/homeproxy/node.js:1213
 msgid "Peer public key"
-msgstr ""
+msgstr "对端公钥"
 
 #: htdocs/luci-static/resources/view/homeproxy/node.js:293
 msgid "Peer public key setting is missing or invalid"
-msgstr ""
+msgstr "对端公钥设置缺失或无效"
 
 #: htdocs/luci-static/resources/view/homeproxy/node.js:243
 msgid "Peer setting is missing"
-msgstr ""
+msgstr "对端设置缺失"
 
 #: htdocs/luci-static/resources/view/homeproxy/client.js:329
 msgid ""
@@ -1802,7 +1802,7 @@ msgstr "持久 keepalive 间隔"
 
 #: htdocs/luci-static/resources/view/homeproxy/node.js:318
 msgid "Persistent keepalive interval setting is invalid"
-msgstr ""
+msgstr "持久 keepalive 间隔设置无效"
 
 #: htdocs/luci-static/resources/view/homeproxy/node.js:1157
 #: htdocs/luci-static/resources/view/homeproxy/server.js:464
@@ -1848,7 +1848,7 @@ msgstr "预共享密钥"
 
 #: htdocs/luci-static/resources/view/homeproxy/node.js:297
 msgid "Pre-shared key setting is invalid"
-msgstr ""
+msgstr "预共享密钥设置无效"
 
 #: htdocs/luci-static/resources/view/homeproxy/client.js:1150
 msgid "Predefined"
@@ -1873,7 +1873,7 @@ msgstr "私钥指纹"
 
 #: htdocs/luci-static/resources/view/homeproxy/node.js:289
 msgid "Private key setting is missing or invalid"
-msgstr ""
+msgstr "私钥设置缺失或无效"
 
 #: htdocs/luci-static/resources/view/homeproxy/client.js:583
 #: htdocs/luci-static/resources/view/homeproxy/client.js:1063
@@ -2083,7 +2083,7 @@ msgstr "保留字段字节"
 
 #: htdocs/luci-static/resources/view/homeproxy/node.js:305
 msgid "Reserved field bytes setting is invalid"
-msgstr ""
+msgstr "保留字段字节设置无效"
 
 #: htdocs/luci-static/resources/view/homeproxy/client.js:673
 msgid "Resolve"
@@ -2385,7 +2385,7 @@ msgstr "成功导入 %s 个节点，共 %s 个。"
 
 #: htdocs/luci-static/resources/view/homeproxy/node.js:1599
 msgid "Successfully imported WireGuard configuration."
-msgstr ""
+msgstr "成功导入 WireGuard 配置。"
 
 #: htdocs/luci-static/resources/view/homeproxy/status.js:86
 msgid "Successfully updated."
@@ -2407,7 +2407,7 @@ msgstr "支持 UDP、TCP、DoH、DoQ、DoT。如未指定则使用 TCP 协议。
 
 #: htdocs/luci-static/resources/view/homeproxy/node.js:1536
 msgid "Supports importing WireGuard configuration files (*.conf)."
-msgstr ""
+msgstr "支持导入 WireGuard 配置文件 (*.conf)。"
 
 #: htdocs/luci-static/resources/view/homeproxy/client.js:313
 msgid "System"
@@ -3001,7 +3001,7 @@ msgstr "WireGuard"
 
 #: htdocs/luci-static/resources/view/homeproxy/node.js:271
 msgid "WireGuard configuration is invalid"
-msgstr ""
+msgstr "WireGuard 配置无效"
 
 #: htdocs/luci-static/resources/view/homeproxy/node.js:1214
 msgid "WireGuard peer public key."
