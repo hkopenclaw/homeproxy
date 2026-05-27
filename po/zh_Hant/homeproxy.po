@@ -42,11 +42,11 @@ msgstr "<strong>上傳檔案前請先儲存配置！</strong>"
 
 #: htdocs/luci-static/resources/view/homeproxy/server.js:664
 msgid "API token"
-msgstr "API 令牌"
+msgstr "API 權杖"
 
 #: htdocs/luci-static/resources/view/homeproxy/node.js:972
 msgid "Accept any if empty."
-msgstr "留空則不校驗。"
+msgstr "留空則不驗證。"
 
 #: htdocs/luci-static/resources/view/homeproxy/client.js:1138
 msgid "Accept empty query response"
@@ -414,7 +414,7 @@ msgstr "僅常用連接埠（繞過 P2P 流量）"
 #: htdocs/luci-static/resources/view/homeproxy/node.js:1000
 #: htdocs/luci-static/resources/view/homeproxy/server.js:354
 msgid "Congestion control algorithm"
-msgstr "擁塞控制算法"
+msgstr "擁塞控制演算法"
 
 #: htdocs/luci-static/resources/view/homeproxy/status.js:232
 msgid "Connection check"
@@ -790,7 +790,7 @@ msgstr "啟用 TCP Brutal"
 #: htdocs/luci-static/resources/view/homeproxy/node.js:1287
 #: htdocs/luci-static/resources/view/homeproxy/server.js:513
 msgid "Enable TCP Brutal congestion control algorithm"
-msgstr "啟用 TCP Brutal 擁塞控制算法。"
+msgstr "啟用 TCP Brutal 擁塞控制演算法。"
 
 #: htdocs/luci-static/resources/view/homeproxy/node.js:1470
 #: htdocs/luci-static/resources/view/homeproxy/server.js:855
@@ -970,7 +970,7 @@ msgstr "生成"
 
 #: htdocs/luci-static/resources/view/homeproxy/status.js:260
 msgid "GitHub token"
-msgstr "GitHub 令牌"
+msgstr "GitHub 權杖"
 
 #: htdocs/luci-static/resources/view/homeproxy/client.js:256
 msgid "Global"
@@ -1090,7 +1090,7 @@ msgstr "主機金鑰"
 
 #: htdocs/luci-static/resources/view/homeproxy/node.js:976
 msgid "Host key algorithms"
-msgstr "主機金鑰算法"
+msgstr "主機金鑰演算法"
 
 #: htdocs/luci-static/resources/view/homeproxy/client.js:581
 #: htdocs/luci-static/resources/view/homeproxy/client.js:1061
@@ -1963,7 +1963,7 @@ msgstr "QUIC"
 #: htdocs/luci-static/resources/view/homeproxy/node.js:1001
 #: htdocs/luci-static/resources/view/homeproxy/server.js:355
 msgid "QUIC congestion control algorithm."
-msgstr "QUIC 擁塞控制算法。"
+msgstr "QUIC 擁塞控制演算法。"
 
 #: htdocs/luci-static/resources/view/homeproxy/node.js:901
 #: htdocs/luci-static/resources/view/homeproxy/server.js:307
@@ -2502,7 +2502,7 @@ msgstr "目標出站標籤。"
 #: htdocs/luci-static/resources/view/homeproxy/server.js:327
 msgid ""
 "Tell the client to use the BBR flow control algorithm instead of Hysteria CC."
-msgstr "讓用戶端使用 BBR 流控算法。"
+msgstr "讓用戶端使用 BBR 流控演算法。"
 
 #: htdocs/luci-static/resources/view/homeproxy/client.js:187
 #: htdocs/luci-static/resources/view/homeproxy/client.js:222
