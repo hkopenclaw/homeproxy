@@ -606,8 +606,8 @@ msgid ""
 "Disables Path MTU Discovery (RFC 8899). Packets will then be at most 1252 "
 "(IPv4) / 1232 (IPv6) bytes in size."
 msgstr ""
-"停用路徑 MTU 發現 (RFC 8899)。 封包的大小最多為 1252 (IPv4) / 1232 (IPv6) "
-"字節。"
+"停用路徑 MTU 發現 (RFC 8899)。 封包的大小最多為 1252 (IPv4) / 1232 (IPv6) 字"
+"節。"
 
 #: htdocs/luci-static/resources/view/homeproxy/client.js:814
 #: htdocs/luci-static/resources/view/homeproxy/client.js:1251
@@ -1170,8 +1170,8 @@ msgid ""
 "If enabled, for UDP proxy requests addressed to a domain, the original "
 "packet address will be sent in the response instead of the mapped domain."
 msgstr ""
-"如果啟用，對於發送到網域的 UDP 代理請求，回應中將發送原始封包地址而不是映射"
-"的網域。"
+"如果啟用，對於發送到網域的 UDP 代理請求，回應中將發送原始封包地址而不是映射的"
+"網域。"
 
 #: htdocs/luci-static/resources/view/homeproxy/node.js:1121
 msgid ""
@@ -2560,15 +2560,16 @@ msgid ""
 "The alternate port to use for the ACME HTTP challenge; if non-empty, this "
 "port will be used instead of 80 to spin up a listener for the HTTP challenge."
 msgstr ""
-"用於 ACME HTTP 質詢的備用連接埠；如果非空，將使用此連接埠而不是 80 來啟動 HTTP 質"
-"詢的偵聽器。"
+"用於 ACME HTTP 質詢的備用連接埠；如果非空，將使用此連接埠而不是 80 來啟動 "
+"HTTP 質詢的偵聽器。"
 
 #: htdocs/luci-static/resources/view/homeproxy/server.js:685
 msgid ""
 "The alternate port to use for the ACME TLS-ALPN challenge; the system must "
 "forward 443 to this port for challenge to succeed."
 msgstr ""
-"用於 ACME TLS-ALPN 質詢的備用連接埠； 系統必須將 443 轉發到此連接埠以使質詢成功。"
+"用於 ACME TLS-ALPN 質詢的備用連接埠； 系統必須將 443 轉發到此連接埠以使質詢成"
+"功。"
 
 #: htdocs/luci-static/resources/view/homeproxy/client.js:596
 msgid ""
