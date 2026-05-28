@@ -14,7 +14,7 @@ msgstr "%s 紀錄"
 
 #: htdocs/luci-static/resources/view/homeproxy/node.js:1821
 msgid "%s nodes removed"
-msgstr "移除了 %s 個節點"
+msgstr "刪除了 %s 個節點"
 
 #: htdocs/luci-static/resources/homeproxy.js:279
 msgid "/etc/homeproxy/certs/..., /etc/acme/..., /etc/ssl/..."
@@ -99,7 +99,7 @@ msgstr "新增伺服器"
 
 #: htdocs/luci-static/resources/view/homeproxy/client.js:975
 msgid "Additional headers to be sent to the DNS server."
-msgstr "發送到 DNS 伺服器的附加標頭。"
+msgstr "傳送到 DNS 伺服器的附加標頭。"
 
 #: htdocs/luci-static/resources/view/homeproxy/client.js:957
 #: htdocs/luci-static/resources/view/homeproxy/node.js:750
@@ -137,7 +137,7 @@ msgstr "所有連接埠"
 
 #: htdocs/luci-static/resources/view/homeproxy/server.js:172
 msgid "Allow access from the Internet."
-msgstr "允許來自網際網路的存取。"
+msgstr "允許從網際網路存取。"
 
 #: htdocs/luci-static/resources/view/homeproxy/node.js:1342
 #: htdocs/luci-static/resources/view/homeproxy/node.js:1747
@@ -739,7 +739,7 @@ msgstr "前置數據標頭"
 
 #: htdocs/luci-static/resources/view/homeproxy/server.js:489
 msgid "Early data is sent in path instead of header by default."
-msgstr "前置數據預設發送在路徑而不是標頭中。"
+msgstr "前置數據預設傳送在路徑而不是標頭中。"
 
 #: htdocs/luci-static/resources/view/homeproxy/node.js:1513
 msgid "Edit nodes"
@@ -1101,7 +1101,7 @@ msgstr "主機/IP 字段"
 msgid ""
 "How long the server should wait for the client to send the authentication "
 "command (in seconds)."
-msgstr "伺服器等待用戶端發送認證命令的時間（單位：秒）。"
+msgstr "伺服器等待用戶端傳送認證命令的時間（單位：秒）。"
 
 #: htdocs/luci-static/resources/view/homeproxy/node.js:734
 #: htdocs/luci-static/resources/view/homeproxy/server.js:179
@@ -1170,14 +1170,14 @@ msgid ""
 "If enabled, for UDP proxy requests addressed to a domain, the original "
 "packet address will be sent in the response instead of the mapped domain."
 msgstr ""
-"如果啟用，對於發送到網域的 UDP 代理請求，回應中將發送原始封包地址而不是映射的"
+"如果啟用，對於傳送到網域的 UDP 代理請求，回應中將傳送原始封包地址而不是映射的"
 "網域。"
 
 #: htdocs/luci-static/resources/view/homeproxy/node.js:1121
 msgid ""
 "If enabled, the client transport sends keepalive pings even with no active "
 "connections."
-msgstr "如果啟用，用戶端傳輸即使沒有活動連線也會發送保持連線 ping。"
+msgstr "如果啟用，用戶端傳輸即使沒有活動連線也會傳送保持連線 ping。"
 
 #: htdocs/luci-static/resources/view/homeproxy/client.js:348
 msgid ""
@@ -1190,7 +1190,7 @@ msgid ""
 "If the transport doesn't see any activity after a duration of this time (in "
 "seconds), it pings the client to check if the connection is still active."
 msgstr ""
-"如果傳輸在此時間段（單位：秒）後沒有看到任何活動，它會向用戶端發送 ping 請求"
+"如果傳輸在此時間段（單位：秒）後沒有看到任何活動，它會向用戶端傳送 ping 請求"
 "以檢查連線是否仍然活動。"
 
 #: htdocs/luci-static/resources/view/homeproxy/node.js:1375
@@ -1262,7 +1262,7 @@ msgstr "閒置會話檢查間隔（單位：秒）。"
 msgid ""
 "Interval for sending heartbeat packets for keeping the connection alive (in "
 "seconds)."
-msgstr "發送心跳包以保持連線存活的時間間隔（單位：秒）。"
+msgstr "傳送心跳包以保持連線存活的時間間隔（單位：秒）。"
 
 #: htdocs/luci-static/resources/view/homeproxy/client.js:665
 #: htdocs/luci-static/resources/view/homeproxy/client.js:1142
@@ -2063,11 +2063,11 @@ msgstr "遠端"
 
 #: htdocs/luci-static/resources/view/homeproxy/node.js:1799
 msgid "Remove %s nodes"
-msgstr "移除 %s 個節點"
+msgstr "刪除 %s 個節點"
 
 #: htdocs/luci-static/resources/view/homeproxy/node.js:1789
 msgid "Remove all nodes from subscriptions"
-msgstr "移除所有訂閱節點"
+msgstr "刪除所有訂閱節點"
 
 #: htdocs/luci-static/resources/view/homeproxy/client.js:1203
 msgid "Reply with REFUSED"
@@ -2341,7 +2341,7 @@ msgid ""
 "frame is not received within the specified timeout duration, the connection "
 "will be closed."
 msgstr ""
-"指定發送 PING 幀後，在指定的超時時間（單位：秒）內必須接收到回應。<br/>如果在"
+"指定傳送 PING 幀後，在指定的超時時間（單位：秒）內必須接收到回應。<br/>如果在"
 "指定的超時時間內沒有收到 PING 幀的回應，則連線將關閉。"
 
 #: htdocs/luci-static/resources/view/homeproxy/client.js:265
@@ -2352,20 +2352,20 @@ msgstr "指定需要被代理的目標連接埠。多個連接埠必須用逗號
 
 #: htdocs/luci-static/resources/view/homeproxy/client.js:913
 msgid "Store RDRC"
-msgstr "存儲 RDRC"
+msgstr "儲存 RDRC"
 
 #: htdocs/luci-static/resources/view/homeproxy/client.js:914
 msgid ""
 "Store rejected DNS response cache.<br/>The check results of <code>Address "
 "filter DNS rule items</code> will be cached until expiration."
 msgstr ""
-"存儲被拒絕的 DNS 回應快取。<br/><code>地址過濾 DNS 規則</code> 的檢查結果將被"
+"儲存被拒絕的 DNS 回應快取。<br/><code>地址過濾 DNS 規則</code> 的檢查結果將被"
 "快取直到過期。"
 
 #: htdocs/luci-static/resources/view/homeproxy/node.js:859
 #: htdocs/luci-static/resources/view/homeproxy/server.js:278
 msgid "String"
-msgstr "字符串"
+msgstr "字串"
 
 #: htdocs/luci-static/resources/view/homeproxy/node.js:1687
 msgid "Sub (%s)"
@@ -3172,7 +3172,7 @@ msgstr "有效網址"
 
 #: htdocs/luci-static/resources/homeproxy.js:271
 msgid "valid base64 key with %d characters"
-msgstr "包含 %d 個字符的有效 base64 金鑰"
+msgstr "包含 %d 個字元的有效 base64 金鑰"
 
 #: htdocs/luci-static/resources/view/homeproxy/client.js:1507
 #: htdocs/luci-static/resources/view/homeproxy/client.js:1539
