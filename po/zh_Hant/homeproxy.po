@@ -67,7 +67,7 @@ msgstr "存取金鑰"
 #: htdocs/luci-static/resources/view/homeproxy/client.js:669
 #: htdocs/luci-static/resources/view/homeproxy/client.js:1146
 msgid "Action"
-msgstr "操作"
+msgstr "動作"
 
 #: htdocs/luci-static/resources/view/homeproxy/client.js:1056
 msgid "Add a DNS rule"
@@ -3132,7 +3132,7 @@ msgstr "未檢查"
 #: htdocs/luci-static/resources/homeproxy.js:237
 #: htdocs/luci-static/resources/view/homeproxy/node.js:1667
 msgid "unique UCI identifier"
-msgstr "獨立 UCI 標識"
+msgstr "獨立 UCI 識別碼"
 
 #: htdocs/luci-static/resources/homeproxy.js:317
 msgid "unique value"
